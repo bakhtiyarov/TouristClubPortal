@@ -12,3 +12,4 @@ Tasks:
 * Simple forum
 * Any user should have own profile page with list of his own hikes and climbs
 * Leaders can create group for new climb or hike and users can join this group. Each Group should have page with info about it - declaration, list of users(active and not), results of exams
+* Support calendar with list of future events

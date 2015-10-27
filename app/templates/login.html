@@ -1,0 +1,22 @@
+{% extends "top_panel.html" %}
+
+{% block content %}
+
+
+<h1>Sign in</h1>
+<form action="" method="post" name="login">
+    {{form.hidden_tag()}}
+    <p>
+        Please, enter your email address and password:<br>
+        {{form.email(size=40)}}<br>
+        {{form.Password(size=40)}}<br>
+
+    </p>
+    <p>{{form.rememberMe}} Remember me</p>
+    <p><input type="submit" value="Sign In"></p>
+
+
+</form>
+
+
+{% endblock %}
