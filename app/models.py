@@ -1,5 +1,6 @@
 from app import db
 from flask_sqlalchemy import SQLAlchemy
+import bcrypt
 
 ROLE_USER = 0
 ROLE_LEADER = 1
@@ -17,6 +18,14 @@ class User(db.Model):
 	role = db.Column(db.SmallInteger, default=ROLE_USER)
 	password = db.Column(db.String(128))
 	status = db.Column(db.SmallInteger, default=STATUS_READ_ONLY)
+
+	def __init__(self, username, e_mail, password, role, status):
+		self.nickname = username
+		self.email = e_mail
+		self.role = role
+		self.password = bcrypt.hashpw(password, bcrypt.gensalt())
+		self.status = status
+
 
 	def __repr__(self):
 		return "User '%r' with e-mail <%r> and role " % (self.nickname, self.email) + ("admin" if self.role == ROLE_ADMIN else "user")

@@ -1,0 +1,29 @@
+{% extends "top_panel.html" %}
+
+{% block content %}
+
+<form action="" method="post" name="signup">
+    {{form.hidden_tag()}}
+    <p>
+        Please enter data in this form and press "Submit" button.<br>
+        <b>Enter your e-mail address:</b><br>
+        {{form.email(size=80)}}<br>
+        {% for e in form.email.errors %}
+        <span style="color: red;">[{{ e }}]</span><br>
+        {% endfor %}
+
+        <b>Enter your full name:</b><br>
+        {{form.username(size=80)}}<br>
+
+        <b>Enter your password:</b><br>
+        {{form.password(size=40)}}<br>
+        <b>Confirm your password:</b><br>
+        {{form.password2(size=40)}}<br>
+        {% for e in form.password2.errors %}
+        <span style="color: red;">[{{ e }}]</span><br>
+        {% endfor %}
+
+        <p><input type="submit" value="Signup"></p>
+    </p>
+</form>
+{% endblock %}
