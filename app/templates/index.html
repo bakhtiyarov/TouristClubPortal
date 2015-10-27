@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% extends "top_panel.html" %}
+
+{% block content %}
+
+<h1>Hello {{user.nickname}}</h1>
+
+{% for msg in messages %}
+<p>{{msg.author.nickname}} says:</p>
+<blockquote><b>{{msg.message}}</b></blockquote>
+{% endfor %}
+{% endblock %}
