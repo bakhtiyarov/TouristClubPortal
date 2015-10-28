@@ -1,10 +1,15 @@
 from wtforms.validators import email
 from app import app, db, lm
-from flask import render_template, flash, redirect, session, url_for, request, g
+from flask import render_template, flash, redirect, session, url_for, request, g, abort, send_file
 from flask_login import login_user, logout_user, current_user, login_required
 from app.forms import LoginForm, SignupForm
 from app.models import User, ROLE_ADMIN, ROLE_USER, ROLE_LEADER, STATUS_BANNED, STATUS_OK, STATUS_READ_ONLY
 import bcrypt
+from hashlib import md5
+from wand.image import Image
+from config import UPLOADED_AVATARS_DEST, basedir
+from os import path
+import io
 
 
 @lm.user_loader
@@ -92,3 +97,40 @@ def signup():
 		return redirect('/')
 
 	return render_template('signup.html', completed=False, form=form)
+
+
+@app.route('/upload_avatar', methods=['POST'])
+def upload_avatar():
+	#TODO: process situation when request.files don't have needed file
+	if request.method == 'POST' and 'userFile' in request.files:
+		hasher = md5()
+		hasher.update(current_user.email)
+		f1 = request.files['userFile']
+		filename = path.join(UPLOADED_AVATARS_DEST, hasher.hexdigest())
+		f1.save(filename)
+		print('new avatar for user ' + current_user.nickname + ' was saved as ' + filename)
+		img = Image(blob=request.files['userFile'])
+		if img is None:
+			print("Can't parse blob from post message as image!")
+		else:
+			img.resize(320, 240)
+			img = img.convert('png')
+			user = current_user
+			user.load_avatar(img)
+	else:
+		#TODO: redirect to previous url
+		return redirect('/')
+
+
+@app.route('/avatar/<user_id>')
+def get_avatar(user_id):
+	user = load_user(user_id)
+	if user is None:
+		abort(404)
+	else:
+		if user.avatar is None:
+			filename = path.join('app', 'static', 'no_avatar.png')
+			return send_file(filename)
+		else:
+			return send_file(io.BytesIO(user.avatar), mimetype='image/png')
+

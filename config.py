@@ -12,3 +12,5 @@ print(basedir)
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 SQLALCHEMY_TRACK_MODIFICATIONS = True
+
+UPLOADED_AVATARS_DEST = os.path.join(basedir, 'app', 'images', 'avatars')

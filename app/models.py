@@ -1,6 +1,7 @@
 from app import db
 from flask_sqlalchemy import SQLAlchemy
 import bcrypt
+from wand.image import Image, ImageProperty
 
 ROLE_USER = 0
 ROLE_LEADER = 1
@@ -18,6 +19,8 @@ class User(db.Model):
 	role = db.Column(db.SmallInteger, default=ROLE_USER)
 	password = db.Column(db.String(128))
 	status = db.Column(db.SmallInteger, default=STATUS_READ_ONLY)
+	#resized to 320x240; original will be contain at basedir/avatars/md5(email).png
+	avatar = db.Column(db.LargeBinary)
 
 	def __init__(self, username, e_mail, password, role, status):
 		self.nickname = username
@@ -44,3 +47,9 @@ class User(db.Model):
 
 	def get_id(self):
 		return str(self.id)
+
+	def load_avatar(self, picture):
+		img = Image()
+		avatar = picture
+		User.query.filter_by(email=self.email).update({'avatar' : self.avatar})
+		db.session.commit()
