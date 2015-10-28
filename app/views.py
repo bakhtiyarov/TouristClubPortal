@@ -19,12 +19,12 @@ def index():
 	current_user = g.user
 	last_messages = [
 		{
-			'author': {'nickname': 'Linus Torvalds'},
+			'author': {'first_name': 'Linus Torvalds'},
 			'message': 'It is a stupid microblog service!',
 			'date' : '2015.10.11'
 		},
 		{
-			'author': {'nickname': 'Ed Musheed'},
+			'author': {'first_name': 'Ed Musheed'},
 			'message': "It's a very poor design. May be you need another HTML/CSS programmer? :)",
 			'date' : '2015.10.10'
 		}
@@ -92,3 +92,4 @@ def signup():
 		return redirect('/')
 
 	return render_template('signup.html', completed=False, form=form)
+

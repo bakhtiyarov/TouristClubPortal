@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+#Incoorporate changes from app/models.py into migration script in SQLALCHEMY_MIGRATE_REPO
 
 import importlib
 import types
