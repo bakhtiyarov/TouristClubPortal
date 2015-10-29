@@ -28,7 +28,7 @@ class User(db.Model):
 	role = db.Column(db.SmallInteger, default=ROLE_USER)
 	password = db.Column(db.String(128))
 	status = db.Column(db.SmallInteger, default=STATUS_READ_ONLY)
-	passport_data = db.Column(db.Integer(), db.ForeignKey('passport_data.id'))
+	passport_data = db.Column(db.String(32), db.ForeignKey('passport_data.num'))
 
 	def __init__(self, username, e_mail, password, role, status):
 		self.first_name = username
