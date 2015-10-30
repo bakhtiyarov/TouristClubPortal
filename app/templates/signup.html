@@ -5,25 +5,33 @@
 <form action="" method="post" name="signup">
     {{form.hidden_tag()}}
     <p>
-        Please enter data in this form and press "Submit" button.<br>
-        <b>Enter your e-mail address:</b><br>
-        {{form.email(size=80)}}<br>
+        <div align="center"><b>Enter data in the following form and press Signup button.
+        Mandatory fields are marked by red asterisk</b><br><br>
+        First name:<br>
+        {{form.first_name(size=40)}} <font color="red">*</font> <br><br>
+
+        Second name:<br>
+        {{form.second_name(size=40)}}<br><br>
+
+        Patronymic:<br>
+        {{form.patronymic(size=40)}}<br><br>
+
+        <b>E-mail address:</b><br>
+        {{form.email(size=40)}}<font color="red">*</font><br>
         {% for e in form.email.errors %}
         <span style="color: red;">[{{ e }}]</span><br>
         {% endfor %}
 
-        <b>Enter your full name:</b><br>
-        {{form.username(size=80)}}<br>
-
         <b>Enter your password:</b><br>
-        {{form.password(size=40)}}<br>
+        {{form.password(size=40)}}<font color="red">*</font><br>
         <b>Confirm your password:</b><br>
-        {{form.password2(size=40)}}<br>
+        {{form.password2(size=40)}}<font color="red">*</font><br>
         {% for e in form.password2.errors %}
         <span style="color: red;">[{{ e }}]</span><br>
         {% endfor %}
 
         <p><input type="submit" value="Signup"></p>
+        </div>>
     </p>
 </form>
 {% endblock %}

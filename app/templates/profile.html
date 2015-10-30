@@ -1,0 +1,54 @@
+{#await following args: data - User class, editable - boolean(allow edit the data), authenticated - bool for top_panel.html
+passport_allowed - boolean(allow reading passport data, or only contacts), passport - PassportData#}
+
+{% extends "top_panel.html" %}
+
+{% block styles %}
+
+    <style>
+        .column {
+            -webkit-column-width: 300px;
+            -moz-column-width: 300px;
+            column-width: 300px;
+            -webkit-column-count: 2;
+            -moz-column-count: 2;
+            column-count: 2;
+            -webkit-column-gap: 30px;
+            -moz-column-gap: 30px;
+            column-gap: 30px;
+        }
+    </style>
+
+{% endblock %}
+
+
+{% block content %}
+
+
+    <div align="left">
+        <img src="/avatar">
+        {# TODO: need form to load new avatar#}
+    </div>
+    <div align="center">
+        <h3>{{ data.second_name }} {{ data.first_name }} {{ data.patronymic }}</h3><br>
+    </div>
+
+
+    <div align="center">
+    <table style="width:100%">
+        <col style="width: 30%">
+        <col style="width: 70%">
+        <tr>
+            <td>
+                {#Contacts and passport data#}
+                {% block contactsData %}
+                {% endblock %}
+            </td>
+            <td>
+                {#Hike membership, result of physical norms#}
+            </td>
+        </tr>
+    </table>
+    </div>
+
+{% endblock %}

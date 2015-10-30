@@ -28,10 +28,12 @@ class User(db.Model):
 	role = db.Column(db.SmallInteger, default=ROLE_USER)
 	password = db.Column(db.String(128))
 	status = db.Column(db.SmallInteger, default=STATUS_READ_ONLY)
-	passport_data = db.Column(db.String(32), db.ForeignKey('passport_data.num'))
+	passport_data = db.Column(db.String(32), db.ForeignKey('passport_data.id'))
 
-	def __init__(self, username, e_mail, password, role, status):
-		self.first_name = username
+	def __init__(self, first_name, second_name, patronymic, e_mail, password, role, status):
+		self.first_name = first_name
+		self.second_name = second_name
+		self.patronymic = patronymic
 		self.email = e_mail
 		self.role = role
 		self.password = bcrypt.hashpw(password, bcrypt.gensalt())
@@ -61,10 +63,15 @@ class User(db.Model):
 	def get_id(self):
 		return str(self.id)
 
+	def in_one_group_with(self, other):
+		raise NotImplementedError
+		return False
 
 class PassportData(db.Model):
 	__tablename__ = 'passport_data'
-	num = db.Column(db.String(32), primary_key=True)
+	id = db.Column(db.Integer, primary_key=True)
+	ser = db.Column(db.String(2))
+	num = db.Column(db.String(32))
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 	#names and patronymics can differ from user table.
@@ -92,13 +99,10 @@ class PassportData(db.Model):
 
 	def __init__(self, user_id):
 		self.user_id = user_id
-		if User.query.get(user_id).one_or_none() is None:
+		if User.query.get(user_id) is None:
 			raise InvalidIdException(user_id, 'Passport')
-		self.first_name = User.query.get(user_id).one_or_none().first_name
-		self.second_name = User.query.get(user_id).one_or_none().second_name
-
-	def __init__(self):
-		self.user_id = -1
+		self.first_name = User.query.get(user_id).first_name
+		self.second_name = User.query.get(user_id).second_name
 
 
 class Hike(db.Model):

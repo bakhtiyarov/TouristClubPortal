@@ -1,0 +1,67 @@
+{% extends "profile.html" %}
+
+
+{% block contactsData %}
+
+    <div align="center"><h3>Contacts:</h3></div><br>
+    <form action="" method="post" name="editpassportdata">
+        {{ form.hidden_tag() }}
+        e-mail: {{ data.email }}<br>
+
+        Birth date: {{ form.birthdata(size=40) }}<br>
+        {% for e in form.birthdata.errors %}
+            <span style="color: red">[{{ e }}]</span><br>
+        {% endfor %}
+
+        Work place: {{ form.work_place() }}<br>
+        Phone number(mobile): {{ form.mobile_phone(size=40) }}<br>
+        {% for e in form.mobile_phone.errors %}
+            <span style="color: red">[{{ e }}]</span><br>
+        {% endfor %}
+        Phone number(additional): {{ form.additional_phone(size=40) }}<br>
+        Phone number(work): {{ form.work_phone(size=40) }}<br>
+        Phone number(home): {{ form.home_phone(size=40) }}<br>
+        Additional e-mail: {{ form.second_email(size=40) }}<br>
+        {% for e in form.second_email.errors %}
+            <span style="color: red">[{{ e }}]</span><br>
+        {% endfor %}
+        Skype: {{ form.skype_account }}<br>
+        Facebook: {{ form.facebook_account }}<br>
+        {% for e in form.facebook_account.errors %}
+            <span style="color: red">[{{ e }}]</span>
+        {% endfor %}
+        Vk.com: {{ form.vk_account }}<br>
+        {% for e in form.vk_account.errors %}
+            <span style="color: red">[{{ e }}]</span>
+        {% endfor %}
+
+        <div align="center"><h3>Passport data</h3></div>
+        <br>
+
+        Second name: {{ form.second_name }}<br>
+        First name: {{ form.first_name }}<br>
+        Patronymic: {{ form.patronymic }}<br>
+        Passport ser: {{ form.ser }}<br>
+        {% for e in form.ser.errors %}
+            <span style="color: red">[{{ e }}]</span><br>
+        {% endfor %}
+        Passport num: {{ form.num }}<br>
+        {% for e in form.num.errors %}
+            <span style="color: red">[{{ e }}]</span><br>
+        {% endfor %}
+        Issue date: {{ form.issue_date }}<br>
+        {% for e in form.issue_date.errors %}
+            <span style="color: red">[{{ e }}]</span><br>
+        {% endfor %}
+        Expire date: {{ form.expire_date }}<br>
+        {% for e in form.expire_date.errors %}
+            <span style="color: red">[{{ e }}]</span><br>
+        {% endfor %}
+        Issued by: {{ form.issuer }}<br>
+        Address: {{ form.address }}<br>
+
+        <input type="submit" value="Save changes">
+
+    </form>
+
+{% endblock %}

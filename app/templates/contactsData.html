@@ -1,0 +1,94 @@
+{% extends "profile.html" %}
+
+
+{% block contactsData %}
+
+
+    <div align="center"><h3>Contacts:</h3></div><br>
+    e-mail: <a href="mailto:{{ data.email }}">{{ data.email }}</a><br>
+
+    {% if passport %}
+        {% if passport.birthday %}
+            Birth date: {{ passport.birthday }}<br>
+        {% endif %}
+
+        {% if passport.work_place %}
+            Work place: {{ passport.work_place }}<br>
+        {% endif %}
+
+        {% if passport.mobile_phone %}
+            Phone number(mobile): {{ passport.mobile_phone }}<br>
+        {% endif %}
+
+        {% if passport.additional_phone %}
+            Phone number(additional): {{ passport.additional_phone }}<br>
+        {% endif %}
+
+        {% if passport.work_phone %}
+            Phone number(work): {{ passport.work_phone }}<br>
+        {% endif %}
+
+        {% if passport.home_phone %}
+            Phone number(home): {{ passport.home_phone }}<br>
+        {% endif %}
+
+        {% if passport.second_email %}
+            Additional e-mail: {{ passport.second_email }}<br>
+        {% endif %}
+
+        {% if passport.skype_account %}
+            Skype: {{ passport.skype_account }}<br>
+        {% endif %}
+
+        {% if passport.facebook_account %}
+            Facebook: <a href="{{ passport.facebook_account }}">{{ passport.facebook_account }}</a><br>
+        {% endif %}
+
+        {% if passport.vk_account %}
+            Vk.com: <a href="{{ passport.vk_account }}"></a><br>
+        {% endif %}
+
+        {% if passport_allowed %}
+            <div align="center"><h3>Passport data</h3></div><br>
+
+            {% if passport.second_name %}
+                Second name: {{ passport.second_name }}<br>
+            {% endif %}
+
+            {% if passport.first_name %}
+                First name: {{ passport.first_name }}<br>
+            {% endif %}
+
+            {% if passport.patronymic %}
+                Patronymic: {{ passport.patronymic }}<br>
+            {% endif %}
+
+            {% if passport.ser and passport.num %}
+                Passport: {{ passport.ser }} {{ passport.num }}<br>
+            {% endif %}
+
+            {% if passport.issue_date %}
+                Issued at: {{ passport.issue_data }}<br>
+            {% endif %}
+
+            {% if passport.issuer %}
+                Issued by: {{ passport.issuer }}<br>
+            {% endif %}
+
+            {% if passport.release_data %}
+                Expire date: {{ passport.release_data }}<br>
+            {% endif %}
+
+            {% if passport.address %}
+                Address: {{ passport.address }}<br>
+            {% endif %}
+
+        {% endif %}
+    {% endif %}
+
+    {% if editable %}
+        <form action="/edit_profile" method="get" name="edit_profile">
+            <button type="submit">Edit profile data!</button>
+        </form>
+    {% endif %}
+{% endblock %}

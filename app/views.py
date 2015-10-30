@@ -2,8 +2,9 @@ from wtforms.validators import email
 from app import app, db, lm
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask_login import login_user, logout_user, current_user, login_required
-from app.forms import LoginForm, SignupForm
+from app.forms import LoginForm, SignupForm, EditPassportDataForm, setForm
 from app.models import User, ROLE_ADMIN, ROLE_USER, ROLE_LEADER, STATUS_BANNED, STATUS_OK, STATUS_READ_ONLY
+from app.models import PassportData
 import bcrypt
 
 
@@ -29,7 +30,7 @@ def index():
 			'date' : '2015.10.10'
 		}
 	]
-	return render_template('index.html', title="Home page", user=current_user, messages=last_messages)
+	return render_template('index.html', title="Home page", user=current_user, messages=last_messages, authenticated=True)
 
 
 @app.route('/downloads')
@@ -54,7 +55,7 @@ def login():
 		else:
 			return redirect(url_for('login'))
 
-	return render_template('login.html', title='Sign In', form=form)
+	return render_template('login.html', title='Sign In', form=form, authenticated=False)
 
 
 @app.before_request
@@ -72,7 +73,7 @@ def load_user(id):
 def logout():
 	user = current_user
 	logout_user()
-	return redirect(url_for('index'))
+	return redirect(request.args.get('next') or url_for('index'))
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -85,11 +86,77 @@ def signup():
 			flash( "Can't register you because this e-mail already registered!" )
 			return redirect( '/signup' )
 
-		user = User(form.username.data, form.email.data, form.password.data, ROLE_USER, STATUS_READ_ONLY)
+		user = User(form.first_name.data, form.second_name.data, form.patronymic.data, form.email.data,
+					form.password.data, ROLE_USER, STATUS_READ_ONLY)
 		db.session.add(user)
 		db.session.commit()
 		flash('Your registration has finished! You can login using your e-mail address and password')
 		return redirect('/')
 
-	return render_template('signup.html', completed=False, form=form)
+	return render_template('signup.html', completed=False, form=form, authenticated=False)
 
+
+@app.route('/profile/<user_id>')
+@login_required
+def profile(user_id):
+	user = load_user(user_id)
+	if (user == current_user or user.in_one_group_with(current_user) or current_user.role == ROLE_ADMIN) and user.passport_data is not None:
+		pd = PassportData.query.get(user.passport_data)
+		return render_template('contactsData.html', editable=(user == current_user), data=user, authenticated=True, passport=pd, passport_allowed=True)
+	else:
+		return render_template('contactsData.html', editable=(user == current_user), data=user, authenticated=True, passport_allowed=False)
+
+
+@app.route('/profile')
+@login_required
+def redirect_to_profile():
+	return redirect('/profile/' + str(current_user.id))
+
+
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+	user = current_user
+	if user.passport_data is None:
+		pd = PassportData(user.id)
+		db.session.add(pd)
+		db.session.commit()
+		user.passport_data = pd.id
+		db.session.commit()
+	cur_data = PassportData.query.get(user.passport_data)
+	if cur_data is None:
+		cur_data = PassportData()
+	form = EditPassportDataForm()
+	if form.validate_on_submit():
+		if cur_data is None:
+			db.session.add(cur_data)
+
+
+		#TODO: is it available to process only modified values?
+		cur_data.first_name = form.first_name.data
+		cur_data.second_name = form.second_name.data
+		cur_data.patronymic = form.patronymic.data
+		cur_data.birthday = form.birthdata.data
+		cur_data.ser = form.ser.data
+		cur_data.num = form.num.data
+		cur_data.mobile_phone = form.mobile_phone.data
+		cur_data.additional_phone = form.additional_phone.data
+		cur_data.work_phone = form.work_phone.data
+		cur_data.home_phone = form.home_phone.data
+		cur_data.second_email = form.second_email.data
+		cur_data.skype_account = form.skype_account.data
+		cur_data.facebook_account = form.facebook_account.data
+		cur_data.vk_account = form.vk_account.data
+		cur_data.issue_date = form.issue_date.data
+		cur_data.issuer = form.issuer.data
+		cur_data.release_date = form.expire_date.data
+		cur_data.address = form.address.data
+		cur_data.work_place = form.work_place.data
+
+		db.session.add(cur_data)
+		db.session.commit()
+		return redirect('/profile')
+
+	else:
+		setForm(form, cur_data)
+		return render_template('edit_profile.html', data=user, authenticated=True, form=form)

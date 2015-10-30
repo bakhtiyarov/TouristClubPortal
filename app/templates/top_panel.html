@@ -5,10 +5,16 @@
 
     <title>Hiking club "Pink rabbits"</title>
 
+    {% block styles %}
+    {% endblock %}
 </head>
 <body>
-<div align="right"><a href="/index">Home page</a> <a href="/settings">Settings</a> <a
+{% if authenticated %}
+<div align="right"><a href="/index">Home page</a> <a href="/profile">Profile</a> <a
         href="/logout">Logout</a></div>
+{% else %}
+<div align="right"><a href="/index">Home page</a> <a href="/signup">Signup</a></div>
+{% endif %}
 <hr>
 {% with messages = get_flashed_messages() %}
 {% if messages %}
