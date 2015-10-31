@@ -1,5 +1,6 @@
 from app import db
 import bcrypt
+from wand.image import Image, ImageProperty
 
 ROLE_USER = 0
 ROLE_LEADER = 1
@@ -29,6 +30,8 @@ class User(db.Model):
 	password = db.Column(db.String(128))
 	status = db.Column(db.SmallInteger, default=STATUS_READ_ONLY)
 	passport_data = db.Column(db.String(32), db.ForeignKey('passport_data.id'))
+	#resized to 320x240; original will be contain at basedir/avatars/md5(email).png
+	avatar = db.Column(db.LargeBinary)
 
 	def __init__(self, first_name, second_name, patronymic, e_mail, password, role, status):
 		self.first_name = first_name
@@ -143,3 +146,10 @@ class Norm(db.Model):
 
 	def check_squats(self):
 		return self.squats_left + self.squats_right >= 25
+
+	def load_avatar(self, picture):
+		img = Image()
+		avatar = picture
+		User.query.filter_by(email=self.email).update({'avatar' : self.avatar})
+		db.session.commit()
+

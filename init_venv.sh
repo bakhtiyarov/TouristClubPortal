@@ -15,3 +15,4 @@ venv/bin/pip install flipflop
 venv/bin/pip install coverage
 venv/bin/pip install py-bcrypt
 venv/bin/pip install python-dateutil
+venv/bin/pip install wand

@@ -18,3 +18,5 @@ DB_NAME = 'touristicClub'
 SQLALCHEMY_DATABASE_URI = available_db['postgresql'] + DB_USERNAME + ':' + DBL_PASSWORD + '@' + DB_HOST + '/' + DB_NAME
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 SQLALCHEMY_TRACK_MODIFICATIONS = True
+
+UPLOADED_AVATARS_DEST = os.path.join(basedir, 'app', 'images', 'avatars')
