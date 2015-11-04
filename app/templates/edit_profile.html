@@ -3,6 +3,11 @@
 
 {% block contactsData %}
 
+    <form action="/upload_avatar" method="post" enctype="multipart/form-data">
+        <input type="file" value="Select new avatar" name="userFile"><br>
+        <input type="submit" value="Upload new avatar">
+    </form>
+
     <div align="center"><h3>Contacts:</h3></div><br>
     <form action="" method="post" name="editpassportdata">
         {{ form.hidden_tag() }}

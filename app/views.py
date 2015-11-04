@@ -172,19 +172,21 @@ def upload_avatar():
 	#TODO: process situation when request.files don't have needed file
 	if request.method == 'POST' and 'userFile' in request.files:
 		hasher = md5()
-		hasher.update(current_user.email)
+		hasher.update(current_user.email.encode('utf-8'))
 		f1 = request.files['userFile']
 		filename = path.join(UPLOADED_AVATARS_DEST, hasher.hexdigest())
 		f1.save(filename)
-		print('new avatar for user ' + current_user.nickname + ' was saved as ' + filename)
-		img = Image(blob=request.files['userFile'])
+		print('new avatar for user ' + current_user.first_name + current_user.second_name + ' was saved as ' + filename)
+		img = Image(filename=filename)
 		if img is None:
 			print("Can't parse blob from post message as image!")
+			return redirect('/profile')
 		else:
 			img.resize(320, 240)
 			img = img.convert('png')
 			user = current_user
 			user.load_avatar(img)
+			return redirect('/profile')
 	else:
 		#TODO: redirect to previous url
 		return redirect('/')
@@ -201,3 +203,9 @@ def get_avatar(user_id):
 			return send_file(filename)
 		else:
 			return send_file(io.BytesIO(user.avatar), mimetype='image/png')
+
+@login_required
+@app.route('/avatar')
+def get_my_avatar():
+	user = current_user
+	return redirect('/avatar/' + str(user.id))

@@ -70,6 +70,11 @@ class User(db.Model):
 		raise NotImplementedError
 		return False
 
+	def load_avatar(self, picture):
+		self.avatar = picture.make_blob()
+		User.query.filter_by(email=self.email).update({'avatar' : self.avatar})
+		db.session.commit()
+
 class PassportData(db.Model):
 	__tablename__ = 'passport_data'
 	id = db.Column(db.Integer, primary_key=True)
@@ -146,10 +151,4 @@ class Norm(db.Model):
 
 	def check_squats(self):
 		return self.squats_left + self.squats_right >= 25
-
-	def load_avatar(self, picture):
-		img = Image()
-		avatar = picture
-		User.query.filter_by(email=self.email).update({'avatar' : self.avatar})
-		db.session.commit()
 
